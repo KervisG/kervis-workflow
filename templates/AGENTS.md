@@ -16,7 +16,7 @@ REQUIRE:
 
 ## TypeScript (No Any)
 REJECT if:
-- `any`, `as any`, or “just to make it compile” type assertions are introduced.
+- `any`, `as any`, or "just to make it compile" type assertions are introduced.
 - `@ts-ignore` is used.
 REQUIRE:
 - Use `unknown` + narrowing/type guards for uncertain data.
@@ -49,6 +49,15 @@ REQUIRE:
 PREFER:
 - Keep UI-only helpers next to the UI (`ui/.../utils.ts`).
 - Keep business rules out of `ui/` (put them in `core/` or `application/`).
+
+## Shared UI (shadcn-first)
+REQUIRE:
+- Before creating a new UI primitive, search existing shared UI components and reuse them.
+- If the primitive does not exist, create it in shared UI first, then consume it from domain UI.
+REJECT if:
+- Duplicating an existing shared UI primitive with a new component.
+PREFER:
+- Extend shared primitives via CVA variants instead of creating near-duplicates.
 
 ## Examples (Mapping)
 PREFER:

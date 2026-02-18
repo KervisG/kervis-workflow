@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const template = path.resolve(__dirname, "..", "templates", "AGENTS.MD");
+const template = path.resolve(__dirname, "..", "templates", "AGENTS.md");
 const target = path.resolve(process.cwd(), "AGENTS.md");
 
 const args = process.argv.slice(2);
