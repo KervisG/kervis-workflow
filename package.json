@@ -5,7 +5,7 @@
   "bin": {
     "kervisworkflow": "bin/kervis-workflow.mjs"
   },
-  "files": ["bin", "templates"],
+  "files": ["bin", "templates", "skills"],
   "engines": {
     "node": ">=18"
   },
