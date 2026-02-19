@@ -14,6 +14,13 @@ REQUIRE:
 - Explain the reasoning briefly (why, not just what).
 - Provide a test checklist (commands + expected result).
 
+## Git & Commits
+REQUIRE:
+- Use Conventional Commits for commit messages.
+PREFER:
+- Keep commits small and focused (one intent per commit).
+- Follow `skills/git/COMMITS.md`.
+
 ## TypeScript (No Any)
 REJECT if:
 - `any`, `as any`, or "just to make it compile" type assertions are introduced.
@@ -21,6 +28,10 @@ REJECT if:
 REQUIRE:
 - Use `unknown` + narrowing/type guards for uncertain data.
 - Add explicit types for non-trivial public APIs (component props, exported functions, shared hooks).
+PREFER:
+- Prefer const maps (`as const`) + derived types over hand-written unions.
+- Use `import type` for type-only imports.
+- Follow `skills/typescript/TYPESCRIPT_STRICT.md`.
 
 ## Architecture & Layout (Clean + Hexagonal)
 REQUIRE:
@@ -114,6 +125,16 @@ REQUIRE:
 ALLOW (exception):
 - Third-party CSS imports required by a library.
 - Minimal global CSS only for Tailwind directives/tokens/variables or cases Tailwind cannot reasonably express (must justify).
+
+## Responsive
+REQUIRE:
+- Mobile-first by default; verify UI at 360px, 768px, 1024px+.
+- Avoid fixed widths/heights unless necessary; prefer fluid layouts.
+- Tables and long content must handle small screens (wrap, truncate, hide columns, or horizontal scroll wrapper).
+REJECT if:
+- UI breaks on mobile (overflow, clipped dialogs, unreadable text, untappable controls).
+PREFER:
+- Follow `skills/ui/RESPONSIVE_TAILWIND.md`.
 
 ## DRY (Duplication)
 REJECT if:
