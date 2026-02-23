@@ -5,9 +5,6 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const templateAgents = path.resolve(__dirname, "..", "templates", "AGENTS.md");
-const targetAgents = path.resolve(process.cwd(), "AGENTS.md");
-
 const skillsSourceDir = path.resolve(__dirname, "..", "skills");
 const skillsTargetDir = path.resolve(process.cwd(), "skills");
 
@@ -15,6 +12,42 @@ const args = process.argv.slice(2);
 const cmd = args[0] ?? "init";
 const force = args.includes("--force");
 const withSkills = args.includes("--with-skills");
+
+function getPreset(argv) {
+  const inline = argv.find((a) => a.startsWith("--preset="));
+  if (inline) return inline.split("=")[1] ?? "";
+  const i = argv.indexOf("--preset");
+  if (i === -1) return "frontend";
+  return argv[i + 1] ?? "";
+}
+
+const preset = getPreset(args);
+
+function getAgentsPaths(presetName) {
+  if (presetName === "frontend" || presetName === "default") {
+    return {
+      templateAgents: path.resolve(__dirname, "..", "templates", "AGENTS.md"),
+      targetAgents: path.resolve(process.cwd(), "AGENTS.md"),
+    };
+  }
+
+  if (presetName === "backend") {
+    return {
+      templateAgents: path.resolve(
+        __dirname,
+        "..",
+        "templates",
+        "backend",
+        "AGENTS.md"
+      ),
+      targetAgents: path.resolve(process.cwd(), "backend", "AGENTS.md"),
+    };
+  }
+
+  return null;
+}
+
+const agentsPaths = getAgentsPaths(preset);
 
 function copyDir(srcDir, destDir) {
   fs.mkdirSync(destDir, { recursive: true });
@@ -27,9 +60,20 @@ function copyDir(srcDir, destDir) {
 }
 
 if (cmd !== "init") {
-  console.error("Usage: kervisworkflow init [--force] [--with-skills]");
+  console.error(
+    "Usage: kervisworkflow init [--preset frontend|backend] [--force] [--with-skills]"
+  );
   process.exit(1);
 }
+
+if (!agentsPaths) {
+  console.error(
+    `Unknown preset: ${preset}. Use --preset frontend|backend (default: frontend).`
+  );
+  process.exit(1);
+}
+
+const { templateAgents, targetAgents } = agentsPaths;
 
 if (!fs.existsSync(templateAgents)) {
   console.error(`Template not found: ${templateAgents}`);
@@ -41,8 +85,9 @@ if (fs.existsSync(targetAgents) && !force) {
   process.exit(1);
 }
 
+fs.mkdirSync(path.dirname(targetAgents), { recursive: true });
 fs.copyFileSync(templateAgents, targetAgents);
-console.log("Created AGENTS.md");
+console.log(`Created ${path.relative(process.cwd(), targetAgents)}`);
 
 if (withSkills) {
   if (!fs.existsSync(skillsSourceDir)) {
