@@ -44,6 +44,19 @@ function getAgentsPaths(presetName) {
     };
   }
 
+  if (presetName === "react-native") {
+    return {
+      templateAgents: path.resolve(
+        __dirname,
+        "..",
+        "templates",
+        "react-native",
+        "AGENTS.md"
+      ),
+      targetAgents: path.resolve(process.cwd(), "AGENTS.md"),
+    };
+  }
+
   return null;
 }
 
@@ -61,14 +74,14 @@ function copyDir(srcDir, destDir) {
 
 if (cmd !== "init") {
   console.error(
-    "Usage: kervisworkflow init [--preset frontend|backend] [--force] [--with-skills]"
+    "Usage: kervisworkflow init [--preset frontend|backend|react-native] [--force] [--with-skills]"
   );
   process.exit(1);
 }
 
 if (!agentsPaths) {
   console.error(
-    `Unknown preset: ${preset}. Use --preset frontend|backend (default: frontend).`
+    `Unknown preset: ${preset}. Use --preset frontend|backend|react-native (default: frontend).`
   );
   process.exit(1);
 }
